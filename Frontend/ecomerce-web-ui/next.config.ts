@@ -2,9 +2,18 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
     images: {
-        domains: [
-            "localhost",
-            "img.lazcdn.com",
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "img.lazcdn.com",
+                pathname: "/**",
+            },
+            {
+                protocol: "http",
+                hostname: "localhost",
+                port: "8080",
+                pathname: "/**",
+            }
         ]
     }
 };
