@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from "react";
-
 interface PaginationProps {
     totalItems: number;
     itemsPerPage: number;
