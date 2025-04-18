@@ -15,7 +15,7 @@ const HeaderLink = {
 
 export default function HeaderBar() {
     return (
-        <header className="bg-white shadow-md">
+        <header className="bg-white shadow-md sticky top-0 z-50">
             <div className="container mx-auto px-4 py-4 flex items-center justify-between">
                 <div className="flex items-center">
                     <Link href={HeaderLink.home} className="flex items-center">
