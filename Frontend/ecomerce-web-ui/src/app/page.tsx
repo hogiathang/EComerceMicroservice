@@ -73,7 +73,7 @@ export default function Home() {
     ];
 
     return (
-        <div className="w-full min-h-screen flex flex-col items-center text-black">
+        <div className="w-full min-h-screen flex flex-col items-center text-black bg-gray-100">
             <section className="w-full md:w-[90%] lg:w-[80%] max-w-screen-xl mx-auto h-[300px] sm:h-[400px] md:h-[500px] relative px-4 sm:px-6 md:px-8 mt-4 md:mt-8">
                 <HeroSlider />
             </section>
