@@ -22,4 +22,9 @@ public class AccountController {
     public ResponseEntity<String> register(@RequestBody @Validated RegisterDto registerDto) {
         return new ResponseEntity<>(accountService.accountRegister(registerDto), HttpStatus.CREATED);
     }
+
+    @PostMapping("/test")
+    public String test() {
+        return "test";
+    }
 }
