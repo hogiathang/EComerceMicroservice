@@ -10,7 +10,6 @@ public class AccountMapper {
         accountEntity.setUsername(registerDto.getName());
         accountEntity.setEmail(registerDto.getEmail());
         accountEntity.setPassword(registerDto.getPassword());
-        accountEntity.setIsActive(true);
         return accountEntity;
     }
 }

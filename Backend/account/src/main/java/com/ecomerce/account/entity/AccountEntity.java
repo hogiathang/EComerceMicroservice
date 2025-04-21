@@ -32,6 +32,12 @@ public class AccountEntity {
     @Column (nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
     private Boolean isActive;
 
+    @Column (nullable = false)
+    private String role;
+
+    @Column (nullable = false)
+    private String refreshToken;
+
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<UserAddressEntity> listOfAddresses;
 }

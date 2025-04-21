@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @ControllerAdvice
@@ -20,7 +21,8 @@ public class GlobalExceptionHandler {
                 webRequest.getDescription(false),
                 "Account Service",
                 e.getMessage(),
-                HttpStatus.INTERNAL_SERVER_ERROR
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                new Date().toString()
         );
         return new ResponseEntity<>(exceptionDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -32,7 +34,8 @@ public class GlobalExceptionHandler {
                 webRequest.getDescription(false),
                 "Account Service",
                 e.getMessage(),
-                HttpStatus.BAD_REQUEST
+                HttpStatus.BAD_REQUEST,
+                new Date().toString()
         );
         return new ResponseEntity<>(exceptionDto, HttpStatus.BAD_REQUEST);
     }
@@ -44,7 +47,8 @@ public class GlobalExceptionHandler {
                 webRequest.getDescription(false),
                 "Account Service",
                 e.getMessage(),
-                HttpStatus.CONFLICT
+                HttpStatus.CONFLICT,
+                new Date().toString()
         );
         return new ResponseEntity<>(exceptionDto, HttpStatus.CONFLICT);
     }
@@ -64,7 +68,8 @@ public class GlobalExceptionHandler {
                 webRequest.getDescription(false),
                 "Account Service",
                 message.toString(),
-                HttpStatus.BAD_REQUEST
+                HttpStatus.BAD_REQUEST,
+                new Date().toString()
         ), HttpStatus.BAD_REQUEST);
     }
 }

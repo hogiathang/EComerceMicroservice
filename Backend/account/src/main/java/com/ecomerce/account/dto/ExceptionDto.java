@@ -15,4 +15,5 @@ public class ExceptionDto {
     private String serviceName;
     private String message;
     private HttpStatus status;
+    private String timestamp;
 }
