@@ -18,8 +18,8 @@ import java.util.Date;
 @Service
 public class JWTImpl implements JWTGenerator {
     private static final String SIGNATURE = "your-very-secure-secret-key-should-be-long-enough";
-    private static final int EXPIRATION_TIME = 3600000;
-    private static final int REFRESH_EXPIRATION_TIME = 604800000;
+    private static final int EXPIRATION_TIME = 3600000; // 1 hour
+    private static final int REFRESH_EXPIRATION_TIME = 604800000; // 7 days
 
     @Override
     public String generateToken(String username, String role) {
