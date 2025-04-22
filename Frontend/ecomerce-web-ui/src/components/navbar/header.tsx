@@ -1,8 +1,11 @@
+'use client';
 import Link from "next/link";
 import { SearchBar } from "./utils/search-bar";
 import Logo from "@images/logo.jpg";
 import CartImg from "@images/cart.svg";
 import Image from "next/image";
+import React, { useEffect, useState } from "react";
+
 const HeaderLink = {
     login: "/auth/login",
     register: "/auth/register",
@@ -13,7 +16,36 @@ const HeaderLink = {
     home: "/",
 }
 
+const HandleUserLogout = async () => {
+    window.location.href = HeaderLink.home;
+}
+
 export default function HeaderBar() {
+    const renderUserSection = () => {
+        // console.log("userDetails", userDetails);
+        // if (typeof (userDetails) === "undefined" || userDetails === null) {
+        return (
+            <Link href={HeaderLink.login} className="text-gray-600 hover:text-gray-900 text-lg">
+                Login
+            </Link>
+        );
+        // } else {
+        //     const username = userDetails.sub;
+        //     return (
+        //         <div className="flex items-center space-x-2">
+        //             <span className="text-gray-600 text-lg">{username}</span>
+        //             <button
+        //                 onClick={HandleUserLogout}
+        //                 className="text-gray-600 hover:text-gray-900 text-lg"
+        //             >
+        //                 Logout
+        //             </button>
+        //         </div>
+        //     )
+        // }
+    }
+
+
     return (
         <header className="bg-white shadow-md sticky top-0 z-50">
             <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -51,9 +83,7 @@ export default function HeaderBar() {
                             <span className="absolute top-0 right-0 bg-red-500 text-white rounded-full px-1 text-xs">0</span>
                         </div>
                     </Link>
-                    <Link href={HeaderLink.login} className="text-gray-600 hover:text-gray-900 text-lg">
-                        Login
-                    </Link>
+                    {renderUserSection()}
                 </nav>
             </div>
         </header>
