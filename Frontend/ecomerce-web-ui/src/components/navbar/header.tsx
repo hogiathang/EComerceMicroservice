@@ -5,6 +5,8 @@ import Logo from "@images/logo.jpg";
 import CartImg from "@images/cart.svg";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { sendRequest } from "@/lib/sendRequest";
+import { backendApiPath } from "@/lib/backendApiPath";
 
 const HeaderLink = {
     login: "/auth/login",
@@ -14,35 +16,94 @@ const HeaderLink = {
     contact: "/contact",
     cart: "/cart",
     home: "/",
-}
+};
 
-const HandleUserLogout = async () => {
-    window.location.href = HeaderLink.home;
+const getLoggedInStatus = async () => {
+    try {
+        const response = await sendRequest(
+            backendApiPath.userInfoHeader,
+            "GET"
+        );
+        return response.success ? response : false;
+    } catch (error) {
+        console.error("Error in fetching logged-in status:", error);
+        return false;
+    }
+};
+
+const getLoggedOutStatus = async () => {
+    try {
+        const response = await sendRequest(
+            backendApiPath.logout,
+            "POST"
+        )
+        return response.success ? response : false;
+    } catch (error) {
+        return false;
+    }
 }
 
 export default function HeaderBar() {
-    const renderUserSection = () => {
-        return (
-            <Link href={HeaderLink.login} className="text-gray-600 hover:text-gray-900 text-lg">
-                Login
-            </Link>
-        );
-        // } else {
-        //     const username = userDetails.sub;
-        //     return (
-        //         <div className="flex items-center space-x-2">
-        //             <span className="text-gray-600 text-lg">{username}</span>
-        //             <button
-        //                 onClick={HandleUserLogout}
-        //                 className="text-gray-600 hover:text-gray-900 text-lg"
-        //             >
-        //                 Logout
-        //             </button>
-        //         </div>
-        //     )
-        // }
-    }
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    const [userInfo, setUserInfo] = useState<{ username: string; avatar: string } | null>(null);
 
+    useEffect(() => {
+        const loggedInStatus = sessionStorage.getItem("isLoggedIn");
+        if (loggedInStatus === "true") {
+            setIsLoggedIn(true);
+            getLoggedInStatus().then((response) => {
+                if (response) {
+                    setUserInfo({
+                        username: response.data.username,
+                        avatar: response.data.avatar,
+                    });
+                } else {
+                    setIsLoggedIn(false);
+                    sessionStorage.setItem("isloggedIn", "false");
+                }
+            });
+        }
+    }, []);
+
+    const renderUserSection = () => {
+        if (isLoggedIn && userInfo) {
+            return (
+                <>
+                    <Link href={HeaderLink.register} className="text-gray-600 hover:text-gray-900 text-lg flex items-center">
+                        <img
+                            src={`data:image/png;base64,${userInfo.avatar}`}
+                            alt="User Avatar"
+                            width={40}
+                            height={40}
+                            className="rounded-full mr-2"
+                        />
+                        {userInfo.username}
+                    </Link>
+                    <div className="flex items-center">
+                        <button
+                            onClick={() => {
+                                getLoggedOutStatus().then((response) => {
+                                    if (response) {
+                                        setIsLoggedIn(false);
+                                        sessionStorage.setItem("isloggedIn", "false");
+                                    }
+                                });
+                            }}
+                            className="text-gray-600 hover:text-gray-900 text-lg ml-4"
+                        >
+                            Logout
+                        </button>
+                    </div>
+                </>
+            );
+        } else {
+            return (
+                <Link href={HeaderLink.login} className="text-gray-600 hover:text-gray-900 text-lg">
+                    Login
+                </Link>
+            );
+        }
+    };
 
     return (
         <header className="bg-white shadow-md sticky top-0 z-50">

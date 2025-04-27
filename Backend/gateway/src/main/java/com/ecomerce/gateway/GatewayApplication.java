@@ -29,10 +29,11 @@ public class GatewayApplication {
 						.uri("lb://user-service"))
 
 				.route(p-> p
-						.path("/register", "/login")
+						.path("/register", "/login", "/logout")
 						.filters(f-> f
 								.rewritePath("/register", "/api/v1/account/register")
-								.rewritePath("/login", "/api/v1/account/login"))
+								.rewritePath("/login", "/api/v1/account/login")
+								.rewritePath("/logout", "/api/v1/account/logout"))
 						.uri("lb://user-service"))
 				.build();
 	}

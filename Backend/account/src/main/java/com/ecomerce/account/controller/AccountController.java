@@ -79,4 +79,19 @@ public class AccountController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new ResponseDto(username, "success"));
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ResponseDto> logout() {
+        ResponseCookie cookie = ResponseCookie.from("accessToken", "")
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .sameSite("None")
+                .maxAge(0)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(new ResponseDto("User logged out successfully", "success"));
+    }
 }

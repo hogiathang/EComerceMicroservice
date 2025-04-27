@@ -38,6 +38,7 @@ const HandleRegisterFormSubmit = (
                     draggable: true,
                     progress: undefined,
                 });
+                sessionStorage.setItem("isLoggedIn", "true")
                 window.location.href = "/"
             } else {
                 toast.error(response.message, {

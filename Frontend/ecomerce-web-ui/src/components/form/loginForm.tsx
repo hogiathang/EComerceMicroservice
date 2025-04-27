@@ -5,7 +5,6 @@ import HandleFieldChange from "@/lib/handleOnChangeField";
 import { sendRequest } from "@/lib/sendRequest";
 import { backendApiPath } from "@/lib/backendApiPath";
 import { toast } from "react-toastify";
-import { setAuthToken } from "@/lib/jwtsUtils";
 
 const HandleLoginFormSubmit = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -38,7 +37,7 @@ const HandleLoginFormSubmit = (
                     draggable: true,
                     progress: undefined,
                 });
-                console.log(response.data.accessToken);
+                sessionStorage.setItem("isLoggedIn", "true")
                 window.location.href = "/";
             } else {
                 toast.error(response.message, {
