@@ -4,17 +4,16 @@ import com.ecomerce.account.dto.LoginDto;
 import com.ecomerce.account.dto.RegisterDto;
 import com.ecomerce.account.dto.ResponseDto;
 import com.ecomerce.account.service.IAccountService;
+import com.ecomerce.account.service.JWTGenerator;
 import com.ecomerce.account.utils.Pair;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -24,6 +23,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class AccountController {
     private final IAccountService accountService;
+    private final JWTGenerator jwtGenerator;
 
     @PostMapping("/login")
     public ResponseEntity<ResponseDto> login(@RequestBody @Validated LoginDto loginDto) {
@@ -71,5 +71,12 @@ public class AccountController {
                 .build();
 
         return new Pair<>(aT, rT);
+    }
+
+    @GetMapping("/get/account/username")
+    public ResponseEntity<ResponseDto> getMyUsername() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new ResponseDto(username, "success"));
     }
 }

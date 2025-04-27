@@ -8,5 +8,5 @@ public interface JWTGenerator {
     String  getRoleFromToken(String token);
     String  getUsernameFromToken(String token);
     Boolean isValidToken(String token);
-    String  resolveToken(HttpServletRequest request);
+    String  resolveToken(HttpServletRequest request, String tokenName);
 }

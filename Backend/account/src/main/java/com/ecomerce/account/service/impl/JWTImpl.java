@@ -3,6 +3,7 @@ package com.ecomerce.account.service.impl;
 import com.ecomerce.account.service.JWTGenerator;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,9 +19,10 @@ import java.util.Date;
 @Service
 public class JWTImpl implements JWTGenerator {
     private static final String SIGNATURE = "your-very-secure-secret-key-should-be-long-enough";
-    private static final int EXPIRATION_TIME = 3600000; // 1 hour
-    private static final int REFRESH_EXPIRATION_TIME = 604800000; // 7 days
-
+//    private static final int EXPIRATION_TIME = 3600000; // 1 hour
+//    private static final int REFRESH_EXPIRATION_TIME = 604800000; // 7 days
+    private static final int EXPIRATION_TIME = 30000;
+    private static final int REFRESH_EXPIRATION_TIME = 900000; // 15 minutes
     @Override
     public String generateToken(String username, String role) {
         return Jwts.builder()
@@ -82,20 +84,38 @@ public class JWTImpl implements JWTGenerator {
 
     @Override
     public Boolean isValidToken(String token) {
+        try{
+            JwtParser jwtParser = Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build();
 
-        return Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .isSigned(token);
+
+        boolean isTrueSignature = jwtParser.isSigned(token);
+
+        Claims claims = jwtParser
+                    .parseSignedClaims(token)
+                    .getPayload();
+        Date expirationDate = claims.getExpiration();
+        boolean isNonExpired = expirationDate != null && expirationDate.after(new Date());
+
+        return isTrueSignature && isNonExpired;
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
+        }
     }
 
     @Override
-    public String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+    public String resolveToken(HttpServletRequest request, String tokenName) {
+        String token = null;
+        if (request.getCookies() != null) {
+            for (var cookie : request.getCookies()) {
+                if (tokenName.equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
         }
-        return null;
+        return token;
     }
 
     private SecretKey getSigningKey() {

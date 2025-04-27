@@ -6,6 +6,7 @@ import com.ecomerce.account.service.impl.CustomUserDetailsService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -43,26 +44,56 @@ public class jwtFilter implements Filter {
             return;
         }
 
-
-        String token = jwtGenerator.resolveToken(request);
-        if (token != null && jwtGenerator.isValidToken(token)) {
-            String username = jwtGenerator.getUsernameFromToken(token);
-
-            try {
-                var userDetails = userDetailsService.loadUserByUsername(username);
-                if (userDetails != null) {
-                    var authentication = new UsernamePasswordAuthenticationToken(
-                            userDetails,
-                            null,
-                            userDetails.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtGenerator.resolveToken(request, "accessToken");
+        try {
+            if (token != null && jwtGenerator.isValidToken(token)) {
+                String username = jwtGenerator.getUsernameFromToken(token);
+                try {
+                    var userDetails = userDetailsService.loadUserByUsername(username);
+                    if (userDetails != null) {
+                        var authentication = new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
+                } catch (Exception e) {
+                    SecurityContextHolder.clearContext();
+                    setThrowException(servletRequest, (HttpServletResponse) servletResponse, "Cannot authenticate user");
+                    return;
                 }
-            } catch (Exception e) {
-                SecurityContextHolder.clearContext();
-                setThrowException(servletRequest, (HttpServletResponse) servletResponse, "Cannot authenticate user");
-                return;
+            } else if(token != null) {
+                String refreshToken = jwtGenerator.resolveToken(request, "refreshToken");
+                if (refreshToken != null && jwtGenerator.isValidToken(refreshToken)) {
+                    String username = jwtGenerator.getUsernameFromToken(refreshToken);
+                    String role     = jwtGenerator.getRoleFromToken(refreshToken);
+                    String newAccessToken = jwtGenerator.generateToken(username, role);
+                    String newRefreshToken = jwtGenerator.generateRefeshToken(username, role);
+
+//                    System.out.println("Old access token: " + token);
+//                    System.out.println("New access token: " + newAccessToken);
+
+                    var userDetails = userDetailsService.loadUserByUsername(username);
+                    if (userDetails != null) {
+                        var authentication = new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities());
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                        ((HttpServletResponse) servletResponse).addHeader("Set-Cookie", "accessToken=" + newAccessToken + "; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=604800");
+                        ((HttpServletResponse) servletResponse).addHeader("Set-Cookie", "refreshToken=" + newRefreshToken + "; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=604800");
+                    } else {
+                        SecurityContextHolder.clearContext();
+                        setThrowException(servletRequest, (HttpServletResponse) servletResponse, "Cannot authenticate user");
+                        return;
+                    }
+                } else {
+                    SecurityContextHolder.clearContext();
+                    setThrowException(servletRequest, (HttpServletResponse) servletResponse, "Invalid JWT token");
+                    return;
+                }
             }
-        } else {
+        } catch (Exception e) {
             SecurityContextHolder.clearContext();
             setThrowException(servletRequest, (HttpServletResponse) servletResponse, "Invalid JWT token");
             return;

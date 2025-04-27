@@ -22,8 +22,6 @@ const HandleUserLogout = async () => {
 
 export default function HeaderBar() {
     const renderUserSection = () => {
-        // console.log("userDetails", userDetails);
-        // if (typeof (userDetails) === "undefined" || userDetails === null) {
         return (
             <Link href={HeaderLink.login} className="text-gray-600 hover:text-gray-900 text-lg">
                 Login
