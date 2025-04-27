@@ -6,10 +6,8 @@ import com.ecomerce.account.service.impl.CustomUserDetailsService;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.io.IOException;
 import java.util.Date;
@@ -43,62 +41,18 @@ public class jwtFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-
-        String token = jwtGenerator.resolveToken(request, "accessToken");
-        try {
-            if (token != null && jwtGenerator.isValidToken(token)) {
-                String username = jwtGenerator.getUsernameFromToken(token);
-                try {
-                    var userDetails = userDetailsService.loadUserByUsername(username);
-                    if (userDetails != null) {
-                        var authentication = new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities());
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                    }
-                } catch (Exception e) {
-                    SecurityContextHolder.clearContext();
-                    setThrowException(servletRequest, (HttpServletResponse) servletResponse, "Cannot authenticate user");
-                    return;
-                }
-            } else if(token != null) {
-                String refreshToken = jwtGenerator.resolveToken(request, "refreshToken");
-                if (refreshToken != null && jwtGenerator.isValidToken(refreshToken)) {
-                    String username = jwtGenerator.getUsernameFromToken(refreshToken);
-                    String role     = jwtGenerator.getRoleFromToken(refreshToken);
-                    String newAccessToken = jwtGenerator.generateToken(username, role);
-                    String newRefreshToken = jwtGenerator.generateRefeshToken(username, role);
-
-//                    System.out.println("Old access token: " + token);
-//                    System.out.println("New access token: " + newAccessToken);
-
-                    var userDetails = userDetailsService.loadUserByUsername(username);
-                    if (userDetails != null) {
-                        var authentication = new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities());
-                        SecurityContextHolder.getContext().setAuthentication(authentication);
-                        ((HttpServletResponse) servletResponse).addHeader("Set-Cookie", "accessToken=" + newAccessToken + "; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=604800");
-                        ((HttpServletResponse) servletResponse).addHeader("Set-Cookie", "refreshToken=" + newRefreshToken + "; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=604800");
-                    } else {
-                        SecurityContextHolder.clearContext();
-                        setThrowException(servletRequest, (HttpServletResponse) servletResponse, "Cannot authenticate user");
-                        return;
-                    }
-                } else {
-                    SecurityContextHolder.clearContext();
-                    setThrowException(servletRequest, (HttpServletResponse) servletResponse, "Invalid JWT token");
-                    return;
-                }
-            }
-        } catch (Exception e) {
-            SecurityContextHolder.clearContext();
-            setThrowException(servletRequest, (HttpServletResponse) servletResponse, "Invalid JWT token");
+        if (checkValidAccessToken(request)) {
+            filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-        filterChain.doFilter(servletRequest, servletResponse);
+
+        if (authenticateWithRefreshToken(request, (HttpServletResponse) servletResponse)) {
+            filterChain.doFilter(servletRequest, servletResponse);
+            return;
+        }
+
+        SecurityContextHolder.clearContext();
+        setThrowException(servletRequest, (HttpServletResponse) servletResponse, "Unauthorized");
     }
 
     private void setThrowException(ServletRequest request, HttpServletResponse response, String message) throws IOException {
@@ -117,5 +71,45 @@ public class jwtFilter implements Filter {
                 "\"timestamp\": " + new Date().toString() + " }";
 
         response.getWriter().write(jsonResponse);
+    }
+
+    private boolean checkValidAccessToken(HttpServletRequest request) {
+        String accessToken = jwtGenerator.resolveToken(request, "accessToken");
+        if (accessToken == null || !jwtGenerator.isValidToken(accessToken)) {
+            return false;
+        }
+        setAuthentication(accessToken);
+        return false;
+    }
+
+    private boolean authenticateWithRefreshToken(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = jwtGenerator.resolveToken(request, "refreshToken");
+        if (refreshToken != null && jwtGenerator.isValidToken(refreshToken)) {
+            String username = jwtGenerator.getUsernameFromToken(refreshToken);
+            String role     = jwtGenerator.getRoleFromToken(refreshToken);
+
+            String newAccessToken  = jwtGenerator.generateToken(username, role);
+            String newRefreshToken = jwtGenerator.generateRefeshToken(username, role);
+
+            setAuthentication(newAccessToken);
+
+            response.addHeader("Set-Cookie", "accessToken=" + newAccessToken + "; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=900");
+            response.addHeader("Set-Cookie", "refreshToken=" + newRefreshToken + "; HttpOnly; Secure; SameSite=None; Path=/; Max-Age=604800");
+            return true;
+        }
+        return false;
+    }
+
+    private void setAuthentication(String token) {
+        String username = jwtGenerator.getUsernameFromToken(token);
+
+        var authorities = userDetailsService.loadUserByUsername(username);
+        var authentication = new
+                UsernamePasswordAuthenticationToken(
+                authorities,
+                null,
+                authorities.getAuthorities()
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

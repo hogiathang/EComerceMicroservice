@@ -8,6 +8,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.BadRequestException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -19,10 +21,13 @@ import java.util.Date;
 @Service
 public class JWTImpl implements JWTGenerator {
     private static final String SIGNATURE = "your-very-secure-secret-key-should-be-long-enough";
-//    private static final int EXPIRATION_TIME = 3600000; // 1 hour
-//    private static final int REFRESH_EXPIRATION_TIME = 604800000; // 7 days
-    private static final int EXPIRATION_TIME = 30000;
-    private static final int REFRESH_EXPIRATION_TIME = 900000; // 15 minutes
+
+    @Value("${expiration[0].access-token}")
+    private long EXPIRATION_TIME;
+
+    @Value("${expiration[1].refresh-token}")
+    private long REFRESH_EXPIRATION_TIME;
+
     @Override
     public String generateToken(String username, String role) {
         return Jwts.builder()
