@@ -97,6 +97,6 @@ export default function LoginForm() {
                 onClick={(e) => HandleLoginFormSubmit(e, formData)}>
                 Login
             </button>
-        </div>
+        </div >
     )
 }
