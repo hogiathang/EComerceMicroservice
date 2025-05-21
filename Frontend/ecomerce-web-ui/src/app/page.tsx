@@ -1,13 +1,44 @@
 import HeroSlider from "@/components/hero/Slider";
-import ItemCard from "@/components/items/item-card";
 import Link from "next/link";
-import Image from "next/image";
+import { Category } from "@/components/contents/category/categories";
+import { Carousel } from "@/components/contents/deals/Carousel";
+import { ContentSpan } from "@/components/contents/span/Span";
 
 export default function Home() {
-    // Sample products for demonstration
+
+    const newArrivals = [
+        {
+            id: "1",
+            name: "Smartphone Pro Max",
+            price: 999.99,
+            brand: "TechBrand",
+            itemImage: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
+            description: "Latest smartphone with advanced features and stunning display",
+            discount: 10
+        },
+        {
+            id: "2",
+            name: "Gaming Laptop",
+            price: 1499.99,
+            brand: "GameMaster",
+            itemImage: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
+            description: "High-performance laptop for gaming and productivity",
+            discount: 15
+        },
+        {
+            id: "3",
+            name: "Bluetooth Speaker",
+            price: 79.99,
+            brand: "SoundWave",
+            itemImage: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
+            description: "Portable Bluetooth speaker with deep bass and long battery life",
+            discount: 5
+        }
+    ];
+
     const hotDeals = [
         {
-            id: 1,
+            id: "1",
             name: "Wireless Earbuds",
             price: 129.99,
             brand: "AudioTech",
@@ -16,7 +47,7 @@ export default function Home() {
             discount: 20
         },
         {
-            id: 2,
+            id: "2",
             name: "Smart Watch Series 5",
             price: 249.99,
             brand: "TechGear",
@@ -25,7 +56,16 @@ export default function Home() {
             discount: 15
         },
         {
-            id: 3,
+            id: "3",
+            name: "Ultra HD 4K Monitor",
+            price: 349.99,
+            brand: "VisualPro",
+            itemImage: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
+            description: "27-inch 4K monitor with HDR support and eye-care technology",
+            discount: 25
+        },
+        {
+            id: "4",
             name: "Ultra HD 4K Monitor",
             price: 349.99,
             brand: "VisualPro",
@@ -35,43 +75,6 @@ export default function Home() {
         }
     ];
 
-    const newArrivals = [
-        {
-            id: 4,
-            name: "Ergonomic Office Chair",
-            price: 189.99,
-            brand: "ComfortPlus",
-            itemImage: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
-            description: "Adjustable office chair with lumbar support and breathable mesh",
-            discount: 0
-        },
-        {
-            id: 5,
-            name: "Portable SSD 1TB",
-            price: 159.99,
-            brand: "DataKeep",
-            itemImage: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
-            description: "Ultra-fast portable SSD with USB-C connectivity and shock resistance",
-            discount: 0
-        },
-        {
-            id: 6,
-            name: "Bluetooth Speaker",
-            price: 79.99,
-            brand: "SoundWave",
-            itemImage: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
-            description: "Waterproof Bluetooth speaker with 20-hour playtime and deep bass",
-            discount: 0
-        }
-    ];
-
-    const categories = [
-        { name: "Electronics", image: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif" },
-        { name: "Fashion", image: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif" },
-        { name: "Home & Garden", image: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif" },
-        { name: "Sports", image: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif" },
-    ];
-
     return (
         <div className="w-full min-h-screen flex flex-col items-center text-black bg-gray-100">
             <section className="w-full md:w-[90%] lg:w-[80%] max-w-screen-xl mx-auto h-[300px] sm:h-[400px] md:h-[500px] relative px-4 sm:px-6 md:px-8 mt-4 md:mt-8">
@@ -79,98 +82,67 @@ export default function Home() {
             </section>
 
             <section className="w-full md:w-[90%] lg:w-[80%] max-w-screen-xl mx-auto my-12 px-4 sm:px-6 md:px-8">
-                <h2 className="text-2xl font-bold mb-6">Shop by Category</h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {categories.map((category, index) => (
-                        <Link href={`/category/${category.name.toLowerCase().replace(/\s+/g, '-')}`} key={index}>
-                            <div className="relative rounded-lg overflow-hidden shadow-md h-40 group">
-                                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/50 transition-colors z-10"></div>
-                                <div className="relative h-full w-full">
-                                    <Image
-                                        src={category.image}
-                                        alt={category.name}
-                                        fill
-                                        className="object-cover"
-                                        sizes="(max-width: 768px) 50vw, 25vw"
-                                    />
-                                </div>
-                                <div className="absolute inset-0 flex items-center justify-center z-20">
-                                    <h3 className="text-white text-xl font-bold">{category.name}</h3>
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
+                <Category />
             </section>
 
             <section className="w-full bg-gradient-to-r from-orange-500 to-red-500 py-8">
-                <div className="w-full md:w-[90%] lg:w-[80%] max-w-screen-xl mx-auto px-4 sm:px-6 md:px-8">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-2xl font-bold text-white">Hot Deals</h2>
-                        <span className="text-white bg-red-700 px-3 py-1 rounded-full text-sm font-semibold">
-                            Up to 50% off
-                        </span>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {hotDeals.map((product) => (
-                            <ItemCard
-                                key={product.id}
-                                name={product.name}
-                                price={product.price}
-                                brand={product.brand}
-                                itemImage={product.itemImage}
-                                description={product.description}
-                                discount={product.discount}
-                            />
-                        ))}
-                    </div>
-                    <div className="flex justify-center mt-8">
-                        <Link href="/products/hot-deals" className="bg-white text-red-600 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors">
-                            View All Deals
-                        </Link>
-                    </div>
-                </div>
+                <Carousel
+                    items={hotDeals}
+                    carolHeader={
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-2xl font-bold text-white">Hot Deals</h2>
+                            <span className="text-white bg-red-700 px-3 py-1 rounded-full text-sm font-semibold">
+                                Up to 50% off
+                            </span>
+                        </div>
+                    }
+                    navigation={
+                        <div className="flex justify-center mt-8">
+                            <Link href="/products/hot-deals" className="bg-white text-red-600 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors">
+                                View All Deals
+                            </Link>
+                        </div>
+                    }
+                    colorStyle="bg-white"
+                />
             </section>
 
             <section className="w-full md:w-[90%] lg:w-[80%] max-w-screen-xl mx-auto my-12 px-4 sm:px-6 md:px-8">
-                <div className="relative h-[200px] sm:h-[250px] rounded-lg overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/80 to-transparent z-10"></div>
-                    <div className="relative h-full w-full">
-                        <Image
-                            src="https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif"
-                            alt="Special Offer"
-                            fill
-                            className="object-cover"
-                        />
-                    </div>
-                    <div className="absolute inset-0 flex flex-col justify-center pl-8 sm:pl-12 z-20">
-                        <h3 className="text-white text-3xl font-bold mb-2">Special Offer</h3>
-                        <p className="text-white text-lg mb-4 max-w-xs">Get free shipping on all orders over $50</p>
-                        <Link href="/special-offer" className="bg-white text-blue-600 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors inline-block w-max">
-                            Shop Now
-                        </Link>
-                    </div>
-                </div>
+                <ContentSpan
+                    src="https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif"
+                    alt="Special Offer"
+                    title="Special Offer"
+                    description="Get free shipping on all orders over $50"
+                    link="/special-offer"
+                    linkContent="Shop Now"
+                />
             </section>
 
-            <section className="w-full md:w-[90%] lg:w-[80%] max-w-screen-xl mx-auto px-4 sm:px-6 md:px-8 my-12">
-                <h2 className="text-2xl font-bold mb-6">New Arrivals</h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {newArrivals.map((product) => (
-                        <ItemCard
-                            key={product.id}
-                            name={product.name}
-                            price={product.price}
-                            brand={product.brand}
-                            itemImage={product.itemImage}
-                            description={product.description}
-                        />
-                    ))}
-                </div>
+            <section className="w-full bg-gradient-to-r bg-slate-300 py-8">
+                <Carousel
+                    items={newArrivals}
+                    carolHeader={
+                        <div className="flex items-center justify-between mb-6">
+                            <h2 className="text-2xl font-bold text-gray-800">New Arrivals</h2>
+                        </div>
+                    }
+                    navigation={
+                        <div className="flex justify-center mt-8">
+                            <Link href="/products/new-arrivals" className="bg-white px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-colors">
+                                View All New Products
+                            </Link>
+                        </div>
+                    }
+                    colorStyle="bg-black"
+                />
+
             </section>
 
             <section className="w-full bg-gray-100 py-8">
                 <div className="w-full md:w-[90%] lg:w-[80%] max-w-screen-xl mx-auto px-4 sm:px-6 md:px-8">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-2xl font-bold text-gray-800">Policy:</h2>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div className="flex flex-col items-center text-center p-6">
                             <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-4">

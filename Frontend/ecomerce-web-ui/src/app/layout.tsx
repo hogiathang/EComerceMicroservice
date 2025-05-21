@@ -20,7 +20,7 @@ export default function RootLayout({
           </header>
           <main className="flex-grow">{children}</main>
           <footer className="bg-gray-800 text-white py-4 text-center">
-            <p>&copy; 2023 E-commerce Website. All rights reserved.</p>
+            <p>&copy; Bản quyền ứng dụng thuộc về Hồ Gia Thắng</p>
           </footer>
         </div>
       </body>

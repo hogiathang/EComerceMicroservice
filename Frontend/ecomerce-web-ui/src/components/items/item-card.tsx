@@ -1,50 +1,46 @@
 'use client';
 import Image from "next/image";
-import { useState } from "react";
-
+import { toast } from "react-toastify";
 interface ItemCardProps {
+    id: string,
     name: string,
     price: number,
     brand: string,
     itemImage: string,
     description: string,
     discount?: number,
+    quantity?: number,
 }
 
 export default function ItemCard(
     properties: ItemCardProps
 ) {
-    const [isHovered, setIsHovered] = useState(false);
+    return (
+        <div className="w-full bg-white rounded-lg shadow-lg p-3 sm:p-4 flex flex-col items-center justify-between relative">
+            <div className="w-full aspect-square relative mb-2">
+                <div className="">
+                    <Image
+                        src={properties.itemImage}
+                        alt={properties.name}
+                        fill
+                        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                        className="object-cover rounded-lg"
+                    />
+                </div>
+                <div className="absolute left-0 right-0 top-0 bottom-0
+                transition-all duration-300 ease-in-out opacity-0 hover:opacity-100
+                bg-white/95 backdrop-blur-sm rounded-lg p-3 sm:p-4 overflow-y-auto
+                flex flex-col">
+                    <h4 className="text-base sm:text-lg font-bold text-blue-600 border-b border-gray-200 pb-2 mb-2">Product Details</h4>
 
-    function showItemDetailsWhenHovered() {
-        if (isHovered) {
-            return (
-                <div className="absolute left-0 right-0 bg-white shadow-lg rounded-lg p-3 sm:p-4 mt-2 z-10">
-                    <h4 className="text-base sm:text-lg font-semibold mb-1 sm:mb-2 text-black">Details</h4>
-                    <p className="text-sm sm:text-base text-gray-700 mb-1 sm:mb-2 line-clamp-3">{properties.description}</p>
-                    <div className="flex items-center gap-1 sm:gap-2">
-                        <span className="text-xs sm:text-sm text-gray-500">{properties.brand}</span>
+                    <div className="mb-3">
+                        <span className="inline-block bg-gray-100 text-gray-700 px-2 py-0.5 rounded text-xs mb-2">{properties.brand}</span>
+                    </div>
+
+                    <div className="flex-grow">
+                        <p className="text-sm sm:text-base text-gray-700 mb-3">{properties.description}</p>
                     </div>
                 </div>
-            );
-        }
-        return null;
-    }
-
-    return (
-        <div
-            className="w-full bg-white rounded-lg shadow-lg p-3 sm:p-4 flex flex-col items-center justify-between relative"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-        >
-            <div className="w-full aspect-square relative mb-2">
-                <Image
-                    src={properties.itemImage}
-                    alt={properties.name}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                    className="object-cover rounded-lg"
-                />
             </div>
 
             <div className="w-full">
@@ -65,13 +61,49 @@ export default function ItemCard(
                         <span className="text-base sm:text-lg font-medium text-gray-700">${properties.price}</span>
                     )}
                 </div>
-
-                <button className="w-full py-1.5 sm:py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm sm:text-base rounded-lg transition-colors">
+                <button onClick={() => handleAddToCart(properties)}
+                    className="w-full py-1.5 sm:py-2 bg-blue-500 hover:bg-blue-600 text-white text-sm sm:text-base rounded-lg transition-colors">
                     Add to Cart
                 </button>
             </div>
-
-            {showItemDetailsWhenHovered()}
         </div>
     )
+}
+
+const handleAddToCart = (item: ItemCardProps) => {
+    const localStorageCartItems = localStorage.getItem('cartItems');
+    const cartItems = localStorageCartItems ? JSON.parse(localStorageCartItems) : [];
+    const existingItemIndex = cartItems.findIndex((cartItem: ItemCardProps) => cartItem.name === item.name);
+
+    if (existingItemIndex !== -1) {
+        cartItems[existingItemIndex].quantity += 1;
+    } else {
+        let newItem = {
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            brand: item.brand,
+            image: item.itemImage,
+            description: item.description,
+            discount: item.discount,
+            quantity: 1
+        }
+        cartItems.push(newItem);
+
+    }
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+    addSuccessWithToast(`${item.name} has been added to your cart!`);
+}
+
+const addSuccessWithToast = (message: string) => {
+    toast.success(message, {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+    });
 }
