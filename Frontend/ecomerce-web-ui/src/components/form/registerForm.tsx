@@ -12,7 +12,7 @@ const HandleRegisterFormSubmit = (
 ) => {
     e.preventDefault();
 
-    let userData = {
+    const userData = {
         name: formData.name,
         email: formData.email,
         password: formData.password,

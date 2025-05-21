@@ -1,4 +1,22 @@
+import { usePathname, useRouter } from 'next/navigation';
+
+const categories = [
+    { id: 'electronic', name: "Electronics", image: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif" },
+    { id: 'fashion', name: "Fashion", image: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif" },
+    { id: 'home-garden', name: "Home & Garden", image: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif" },
+    { id: 'sports', name: "Sports", image: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif" },
+];
+
+
+
 export default function VerticalFilter() {
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const handleCategoryClick = (categoryId: string) => {
+        router.push(`/category/${categoryId}`);
+    };
+
     return (
         <div className="w-[20%] bg-gray-100 h-screen overflow-y-auto">
             <div className="p-4">
@@ -7,11 +25,27 @@ export default function VerticalFilter() {
                 <div className="flex flex-col bg-white shadow-md rounded-lg p-4 mb-4">
                     <h3 className="text-lg font-semibold mb-2">Categories</h3>
                     <ul className="space-y-2">
-                        <li><input type="checkbox" id="category1" className="mr-2" /> <label htmlFor="category1">Electronics</label></li>
-                        <li><input type="checkbox" id="category2" className="mr-2" /> <label htmlFor="category2">Clothing</label></li>
-                        <li><input type="checkbox" id="category3" className="mr-2" /> <label htmlFor="category3">Home & Kitchen</label></li>
-                        <li><input type="checkbox" id="category4" className="mr-2" /> <label htmlFor="category4">Books</label></li>
-                        <li><input type="checkbox" id="category5" className="mr-2" /> <label htmlFor="category5">Sports</label></li>
+                        <li key='product' className="flex items-center">
+                            <button
+                                className={`w-full text-left py-1 px-2 rounded hover:bg-gray-100 transition-colors
+                                ${pathname === `/products` ? 'font-semibold bg-gray-50' : ''}`}
+                                onClick={() => { router.push(`/products`) }}
+                            >
+                                All Products
+                            </button>
+                        </li>
+
+                        {categories.map(category => (
+                            <li key={category.id} className="flex items-center">
+                                <button
+                                    className={`w-full text-left py-1 px-2 rounded hover:bg-gray-100 transition-colors
+                                              ${pathname === `/category/${category.id}` ? 'font-semibold bg-gray-50' : ''}`}
+                                    onClick={() => handleCategoryClick(category.id)}
+                                >
+                                    {category.name}
+                                </button>
+                            </li>
+                        ))}
                     </ul>
                 </div>
 

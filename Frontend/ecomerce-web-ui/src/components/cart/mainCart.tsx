@@ -28,7 +28,7 @@ export const MainCart = () => {
     useEffect(() => {
         if (!isClient) return;
         localStorage.setItem('cartItems', JSON.stringify(cartItems));
-    }, [cartItems]);
+    }, [cartItems, isClient]);
 
     const updateQuantity = (id: string, newQuantity: number) => {
         if (newQuantity < 1) return;
@@ -52,7 +52,7 @@ export const MainCart = () => {
                 isEmpty ? (
                     <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg shadow" >
                         <h2 className="text-xl font-semibold">Your Cart is Empty</h2>
-                        <p className="mt-4 text-gray-600">Looks like you haven't added anything to your cart yet.</p>
+                        <p className="mt-4 text-gray-600">Looks like you haven&apos;t added anything to your cart yet.</p>
                         <Link href="/products" className="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
                             Continue Shopping
                         </Link>

@@ -12,7 +12,7 @@ const HandleLoginFormSubmit = (
 ) => {
     e.preventDefault();
 
-    let userData = {
+    const userData = {
         usernameOrEmail: formData.usernameOrEmail,
         password: formData.password,
     }

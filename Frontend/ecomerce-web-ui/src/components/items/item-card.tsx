@@ -78,7 +78,7 @@ const handleAddToCart = (item: ItemCardProps) => {
     if (existingItemIndex !== -1) {
         cartItems[existingItemIndex].quantity += 1;
     } else {
-        let newItem = {
+        const newItem = {
             id: item.id,
             name: item.name,
             price: item.price,

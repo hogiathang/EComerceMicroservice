@@ -1,10 +1,16 @@
-export async function sendRequest(
+interface ResponseData<T> {
+    success: boolean;
+    data?: T;
+    message?: string;
+}
+
+export async function sendRequest<T>(
     url: string,
     method: string,
     body?: object,
     headers?: HeadersInit,
     isLoginOrRegister?: boolean,
-): Promise<any> {
+): Promise<ResponseData<T>> {
     try {
         const response = await fetch(url, {
             method: method,
@@ -35,7 +41,7 @@ export async function sendRequest(
                 data: data,
             }
         }
-    } catch (error) {
+    } catch {
         return {
             success: false,
             message: "Server not responding",
