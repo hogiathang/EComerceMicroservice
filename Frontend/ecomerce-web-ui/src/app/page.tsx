@@ -12,8 +12,9 @@ export default function Home() {
             name: "Smartphone Pro Max",
             price: 999.99,
             brand: "TechBrand",
-            itemImage: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
+            image: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
             description: "Latest smartphone with advanced features and stunning display",
+            quantity: 10,
             discount: 10
         },
         {
@@ -21,8 +22,9 @@ export default function Home() {
             name: "Gaming Laptop",
             price: 1499.99,
             brand: "GameMaster",
-            itemImage: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
+            image: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
             description: "High-performance laptop for gaming and productivity",
+            quantity: 20,
             discount: 15
         },
         {
@@ -30,8 +32,9 @@ export default function Home() {
             name: "Bluetooth Speaker",
             price: 79.99,
             brand: "SoundWave",
-            itemImage: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
+            image: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
             description: "Portable Bluetooth speaker with deep bass and long battery life",
+            quantity: 10,
             discount: 5
         }
     ];
@@ -42,8 +45,9 @@ export default function Home() {
             name: "Wireless Earbuds",
             price: 129.99,
             brand: "AudioTech",
-            itemImage: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
+            image: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
             description: "True wireless earbuds with noise cancellation and 24-hour battery life",
+            quantity: 10,
             discount: 20
         },
         {
@@ -51,8 +55,9 @@ export default function Home() {
             name: "Smart Watch Series 5",
             price: 249.99,
             brand: "TechGear",
-            itemImage: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
+            image: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
             description: "Track your fitness, answer calls, and more with this advanced smartwatch",
+            quantity: 10,
             discount: 15
         },
         {
@@ -60,8 +65,9 @@ export default function Home() {
             name: "Ultra HD 4K Monitor",
             price: 349.99,
             brand: "VisualPro",
-            itemImage: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
+            image: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
             description: "27-inch 4K monitor with HDR support and eye-care technology",
+            quantity: 10,
             discount: 25
         },
         {
@@ -69,8 +75,9 @@ export default function Home() {
             name: "Ultra HD 4K Monitor",
             price: 349.99,
             brand: "VisualPro",
-            itemImage: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
+            image: "https://img.lazcdn.com/g/p/f01c91f5036e2419cfaf626ba752c836.jpg_400x400q80.jpg_.avif",
             description: "27-inch 4K monitor with HDR support and eye-care technology",
+            quantity: 10,
             discount: 25
         }
     ];

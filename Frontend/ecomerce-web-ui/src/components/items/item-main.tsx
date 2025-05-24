@@ -4,25 +4,7 @@ import ItemCard from "./item-card";
 import VerticalFilter from "./item-vertical-filter";
 import Pagination from "../navbar/pagination";
 
-interface Items {
-    id: string;
-    name: string;
-    price: number;
-    brand: string;
-    description: string;
-    itemImage: string;
-    discount?: number;
-}
-
-interface ItemMainComponentProps {
-    title: string;
-    description: string;
-    sortOrder?: string;
-    sortBy?: string;
-    items: Items[]
-}
-
-export default function ItemMainComponent(products: ItemMainComponentProps) {
+export default function ItemMainComponent(products: ItemsComponentProps) {
     return (
         <div className="flex flex-row bg-gray-100 w-[80%] mx-auto pt-10">
             <VerticalFilter />
@@ -44,9 +26,10 @@ export default function ItemMainComponent(products: ItemMainComponentProps) {
                             name={product.name}
                             price={product.price}
                             brand={product.brand}
-                            itemImage={product.itemImage}
+                            image={product.image}
                             description={product.description}
                             discount={product.discount}
+                            quantity={product.quantity}
                         />
                     ))}
                 </div>

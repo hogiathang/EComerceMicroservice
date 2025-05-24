@@ -1,14 +1,13 @@
 import Image from 'next/image';
-import { CartItemType } from './mainCart';
 
 interface CartItemProps {
-    item: CartItemType;
+    item: Items;
     updateQuantity: (id: string, quantity: number) => void;
     removeItem: (id: string) => void;
 }
 
 export default function CartItem({ item, updateQuantity, removeItem }: CartItemProps) {
-    const itemTotal = item.price * item.quantity;
+    const itemTotal = (item.quantity) ? item.price * item.quantity : 0;
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 p-4 border-b hover:bg-gray-50 transition-colors">
@@ -50,15 +49,15 @@ export default function CartItem({ item, updateQuantity, removeItem }: CartItemP
                 <div className="flex items-center border rounded">
                     <button
                         className="px-2 py-1 hover:bg-gray-100"
-                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                        disabled={item.quantity <= 1}
+                        onClick={() => updateQuantity(item.id, (item.quantity) ? item.quantity - 1 : 0)}
+                        disabled={(item.quantity) ? item.quantity <= 1 : true}
                     >
                         -
                     </button>
                     <span className="px-2 py-1 min-w-[30px] text-center">{item.quantity}</span>
                     <button
                         className="px-2 py-1 hover:bg-gray-100"
-                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        onClick={() => updateQuantity(item.id, (item.quantity) ? item.quantity + 1 : 0)}
                     >
                         +
                     </button>

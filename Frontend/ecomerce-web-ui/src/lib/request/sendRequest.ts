@@ -8,15 +8,13 @@ export async function sendRequest<T>(
     url: string,
     method: string,
     body?: object,
-    headers?: HeadersInit,
-    isLoginOrRegister?: boolean,
+    headers?: HeadersInit
 ): Promise<ResponseData<T>> {
     try {
         const response = await fetch(url, {
             method: method,
             headers: {
-                "Content-Type": "application/json",
-                ...headers,
+                ...headers
             },
             body: JSON.stringify(body),
             credentials: "include",
@@ -29,19 +27,14 @@ export async function sendRequest<T>(
             }
         } else {
             const data = await response.json();
-            if (isLoginOrRegister) {
-                let accessToken = response.headers.get("Authorization");
-                if (accessToken) {
-                    accessToken = accessToken.split(" ")[1];
-                    sessionStorage.setItem("accessToken", accessToken);
-                }
-            }
+            console.log(data)
             return {
                 success: true,
                 data: data,
             }
         }
-    } catch {
+    } catch (error) {
+        console.error(error)
         return {
             success: false,
             message: "Server not responding",

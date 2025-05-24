@@ -4,17 +4,8 @@ import { useState, useEffect } from "react"
 import CartItem from "@/components/cart/cartItem"
 import CartSummary from "@/components/cart/cartSummary"
 
-export type CartItemType = {
-    id: string;
-    name: string;
-    price: number;
-    quantity: number;
-    image: string;
-    brand: string;
-}
-
 export const MainCart = () => {
-    const [cartItems, setCartItems] = useState<CartItemType[]>([]);
+    const [cartItems, setCartItems] = useState<Items[]>([]);
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {

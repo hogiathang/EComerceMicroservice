@@ -4,18 +4,8 @@ import { useState, useEffect } from "react";
 import { useResponsiveCarousel } from "@/hooks/useResponsiveCarousel";
 
 
-interface Item {
-    id: string;
-    name: string;
-    price: number;
-    brand: string;
-    itemImage: string;
-    description: string;
-    discount: number;
-}
-
 interface CarouselProps {
-    items: Item[];
+    items: Items[];
     carolHeader: React.ReactNode;
     navigation?: React.ReactNode;
     colorStyle?: string;
@@ -97,9 +87,10 @@ export const Carousel = (
                                         name={product.name}
                                         price={product.price}
                                         brand={product.brand}
-                                        itemImage={product.itemImage}
+                                        image={product.image}
                                         description={product.description}
                                         discount={product.discount}
+                                        quantity={product.quantity}
                                     />
                                 </div>
                             </div>
