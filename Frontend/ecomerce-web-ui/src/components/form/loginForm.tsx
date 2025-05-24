@@ -5,6 +5,12 @@ import { HandleFieldChange, HandleErrorChange } from "@/lib/others/handleOnChang
 import { sendRequest } from "@/lib/request/sendRequest";
 import { backendApiPath } from "@/lib/API/backendApiPath";
 import { toast } from "react-toastify";
+import { ShowToast } from "@/lib/notification/toastHandler";
+import { saveFieldToSession } from "@/lib/storageApi/sessionApi";
+
+interface LoginInterface extends Tokens {
+    user: User
+}
 
 const HandleLoginFormSubmit = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -16,53 +22,39 @@ const HandleLoginFormSubmit = (
         username: formData.username,
         password: formData.password,
     }
-    // try {
-    //     const returnValue = sendRequest(
-    //         backendApiPath.login,
-    //         "POST",
-    //         userData,
-    //         {
-    //             "Content-Type": "application/json",
-    //         },
-    //         true
-    //     )
-    //     returnValue.then((response) => {
-    //         if (response.success) {
-    //             toast.success("User login successfully!", {
-    //                 position: "bottom-right",
-    //                 autoClose: 5000,
-    //                 hideProgressBar: false,
-    //                 closeOnClick: true,
-    //                 pauseOnHover: true,
-    //                 draggable: true,
-    //                 progress: undefined,
-    //             });
-    //             sessionStorage.setItem("isLoggedIn", "true")
-    //             window.location.href = "/";
-    //         } else {
-    //             toast.error(response.message, {
-    //                 position: "bottom-right",
-    //                 autoClose: 5000,
-    //                 hideProgressBar: false,
-    //                 closeOnClick: true,
-    //                 pauseOnHover: true,
-    //                 draggable: true,
-    //                 progress: undefined,
-    //             });
-    //         }
-    //     })
-    // } catch (error) {
-    //     console.error("Error in login:", error);
-    //     toast.error("An error occurred during login.", {
-    //         position: "bottom-right",
-    //         autoClose: 5000,
-    //         hideProgressBar: false,
-    //         closeOnClick: true,
-    //         pauseOnHover: true,
-    //         draggable: true,
-    //         progress: undefined,
-    //     });
-    // }
+    try {
+        const returnValue = sendRequest<ResponseData<LoginInterface>>(
+            backendApiPath.login,
+            "POST",
+            userData,
+            {
+                "Content-Type": "application/json",
+            }
+        )
+        returnValue.then((response) => {
+            if (response.success) {
+                const data = response.data
+                if (data) {
+                    if (response.success && data.data) {
+                        saveFieldToSession("UID", data.data.user.userId)
+                        saveFieldToSession("Username", data.data.user.username)
+                        saveFieldToSession("AccessToken", data.data.accessToken)
+                        saveFieldToSession("RefreshToken", data.data.refreshToken)
+
+                        ShowToast(data.message, "SUCCESS")
+                        window.location.href = "/"
+                    } else {
+                        ShowToast(response.data?.message || "Login failed", "ERROR");
+                    }
+                }
+            } else {
+                ShowToast(response.data?.message || "Login failed", "ERROR");
+            }
+        })
+    } catch (error) {
+        console.error("Error in login:", error);
+        ShowToast("An error occurred durring login.", "ERROR")
+    }
 }
 
 export default function LoginForm() {
